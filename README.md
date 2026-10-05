@@ -297,6 +297,12 @@ The current stack is a development foundation. Before production use, configure 
 - `docs/security.md` — security baseline
 - `docs/TOPOLOGY.md` — application/server classification and topology model
 
+## Reporting and action status
+
+UPO is designed to track patching after deployment, not only trigger it. Provider action IDs are persisted and reconciled through provider APIs. BigFix is the first implementation; endpoint results will be normalized into common UPO states for campaign reporting, compliance, failures, reboot-pending and execution history.
+
+The same provider contract is intentionally retained for future patch-management integrations. See `docs/REPORTING.md`.
+
 ## Development status
 
 Current focus: hosted control plane, topology-aware campaign creation and BigFix provider integration.
