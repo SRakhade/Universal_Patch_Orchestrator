@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import DateTime, String, Text, func
+from sqlalchemy import Boolean, DateTime, Integer, String, Text, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -35,3 +35,19 @@ class ProviderActionRecord(Base):
     state: Mapped[str] = mapped_column(String(32), nullable=False)
     raw_status: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+class EndpointResultRecord(Base):
+    __tablename__ = "endpoint_results"
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    campaign_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
+    provider_action_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
+    endpoint_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    endpoint_name: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    server_role: Mapped[str | None] = mapped_column(String(64), index=True)
+    os: Mapped[str | None] = mapped_column(String(120))
+    state: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    exit_code: Mapped[int | None] = mapped_column(Integer)
+    reboot_required: Mapped[bool | None] = mapped_column(Boolean)
+    failure_reason: Mapped[str | None] = mapped_column(Text)
+    details: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    observed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), index=True)
